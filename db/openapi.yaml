@@ -1,0 +1,453 @@
+openapi: 3.0.1
+info:
+  title: Personal Budget
+  version: 1.0.0
+  description: Personal budget tool managed via API.
+paths:
+  /envelope:
+    summary: Manages discrete budget envelopes.
+    get:
+      summary: Retrieves all budget envelopes
+      description: >-
+        Response contains all budget envelopes and associated data from the
+        database.
+      operationId: envelopes_all
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              examples:
+                Array of all budget envelopes:
+                  value: |
+                    [
+                      {
+                        "id": "001",
+                        "name": "Envelope 1",
+                        "balance": "£100.00"
+                      },
+                      {
+                        "id": "002",
+                        "name": "Envelope 2",
+                        "balance": "£200.00"
+                      },
+                      {
+                        "id": "003",
+                        "name": "Envelope 3",
+                        "balance": "£300.00"
+                      }
+                    ]
+      tags:
+        - Envelope
+    post:
+      summary: Create a new budget envelope
+      description: Create a new budget envelope within the database.
+      operationId: envelope_new
+      requestBody:
+        description: A new envelope object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Envelope'
+        required: true
+      responses:
+        '201':
+          description: Success
+          content:
+            application/json:
+              examples:
+                New envelope object:
+                  value: |-
+                    {
+                      "id": "003",
+                      "name": "Envelope 3",
+                      "balance": "£300.00"
+                    }
+        '400':
+          description: Error - Bad Request
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                Bad Request:
+                  value: Invalid argument provided
+      tags:
+        - Envelope
+  /envelope/{id}:
+    summary: Manages existing individual budget envelope.
+    get:
+      summary: Retrieves a specified budget envelope
+      description: Response contains an envelope matched by id with its associated data.
+      operationId: envelope_by_id
+      parameters:
+        - name: id
+          in: path
+          description: The id of the envelope.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              examples:
+                Envelope object:
+                  value: |-
+                    {
+                      "id": "001",
+                      "name": "Envelope 1",
+                      "balance": "£100.00"
+                    }
+        '400':
+          description: Error - Bad Request
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                Bad Request:
+                  value: Invalid argument provided
+      tags:
+        - Envelope
+    put:
+      summary: Update specified envelope
+      description: Use to modify the attributes of an existing envelope by id.
+      operationId: envelope_update
+      requestBody:
+        description: An updated envelope object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Envelope'
+        required: true
+      parameters:
+        - name: id
+          in: path
+          description: The id of the envelope.
+          required: true
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Success
+          content:
+            application/json:
+              examples:
+                Updated envelope object:
+                  value: |-
+                    {
+                      "id": "002",
+                      "name": "Renamed Env",
+                      "balance": "£200.00"
+                    }
+        '400':
+          description: Error - Bad Request
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                Bad Request:
+                  value: Invalid argument provided
+      tags:
+        - Envelope
+    delete:
+      summary: Deletes a specified envelope
+      description: Removes a specified budget envelope from the database by id.
+      operationId: envelope_delete
+      parameters:
+        - name: id
+          in: path
+          description: The id of the envelope.
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Success
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                Envelope removed:
+                  value: Successful operation
+        '400':
+          description: Error - Bad Request
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                Bad Request:
+                  value: Invalid argument provided
+      tags:
+        - Envelope
+  /transaction:
+    summary: Manages transactions to the budget envelopes.
+    get:
+      summary: Retrieves all transactions
+      description: Returns a complete set of transactions from all budget envelopes.
+      operationId: transaction_get_all
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              examples:
+                Array of transaction objects:
+                  value: |-
+                    [
+                      {
+                        "id": "001",
+                        "deduction": true,
+                        "source": "Example Shop",
+                        "amount": "£10.00",
+                        "envelope_id": "001",
+                        "description": "Shopping for food.",
+                        "datetime": "2022-03-03T14:29:41.544Z"
+                      },
+                      {
+                        "id": "002",
+                        "deduction": false,
+                        "source": "Salary",
+                        "amount": "£1000.00",
+                        "envelope_id": "001",
+                        "description": "Add to food budget",
+                        "datetime": "2022-03-03T14:40:41.544Z"
+                      },
+                      {
+                        "id": "003",
+                        "deduction": true,
+                        "source": "Italian Restaurant",
+                        "amount": "£100.00",
+                        "envelope_id": "003",
+                        "description": "Celebration meal.",
+                        "datetime": "2022-03-03T21:29:41.544Z"
+                      }
+                    ]
+      tags:
+        - Transaction
+    post:
+      summary: Create a new transaction
+      description: >-
+        Adds a transaction to the database applied to a specified budget
+        envelope.
+      operationId: transaction_new
+      requestBody:
+        description: A transaction object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Transaction'
+      responses:
+        '201':
+          description: Success
+          content:
+            application/json:
+              examples:
+                New transaction object:
+                  value: |2-
+                      {
+                        "id": "003",
+                        "deduction": true,
+                        "source": "Italian Restaurant",
+                        "amount": "£100.00",
+                        "envelope_id": "003",
+                        "description": "Celebration meal.",
+                        "datetime": "2022-03-03T21:29:41.544Z"
+                      }
+        '400':
+          description: Error - Bad Request
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                Bad Request:
+                  value: Invalid argument provided
+      tags:
+        - Transaction
+  /transaction/{id}:
+    summary: Manages an existing individual transaction.
+    get:
+      summary: Retrieves specified transaction
+      description: Response includes specified transaction and associated data by id.
+      operationId: transaction_by_id
+      parameters:
+        - name: id
+          in: path
+          description: The id of the transaction.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              examples:
+                Transaction object:
+                  value: |2-
+                      {
+                        "id": "002",
+                        "deduction": false,
+                        "source": "Salary",
+                        "amount": "£1000.00",
+                        "envelope_id": "001",
+                        "description": "Add to food budget",
+                        "datetime": "2022-03-03T14:40:41.544Z"
+                      }
+        '400':
+          description: Error - Bad Request
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                Bad Request:
+                  value: Invalid argument provided
+      tags:
+        - Transaction
+    put:
+      summary: Update specified transaction
+      description: Updates a transaction by id.
+      operationId: transaction_update
+      requestBody:
+        description: An updated transaction object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Transaction'
+      parameters:
+        - name: id
+          in: path
+          description: The id of the transaction.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              examples:
+                Updated transaction object:
+                  value: |2-
+                      {
+                        "id": "002",
+                        "deduction": false,
+                        "source": "Bonus",
+                        "amount": "£10000.00",
+                        "envelope_id": "002",
+                        "description": "Add to holiday budget",
+                        "datetime": "2022-03-03T14:40:41.544Z"
+                      }
+        '400':
+          description: Error - Bad Request
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                Bad Request:
+                  value: Invalid argument provided
+      tags:
+        - Transaction
+    delete:
+      summary: Deletes a specified transaction
+      description: Deletes a transaction from the database by id.
+      operationId: transaction_delete
+      parameters:
+        - name: id
+          in: path
+          description: The id of the transaction.
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Success
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                Transaction removed:
+                  value: Sucessful operation
+        '400':
+          description: Error - Bad Request
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                Bad Request:
+                  value: Invalid argument provided
+      tags:
+        - Transaction
+  /transaction/envelope/{envelope_id}:
+    summary: Manages transactions by specified budget envelope.
+    get:
+      summary: Retrieves all transactions for specified envelope
+      description: Response contains all transactions for a given envelope id.
+      operationId: transaction_by_envelope
+      parameters:
+        - name: envelope_id
+          in: path
+          description: The id of the envelope.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              examples:
+                Array of transaction objects:
+                  value: |-
+                    {"transactions": [
+                      {
+                        "id": "001",
+                        "deduction": true,
+                        "source": "Example Shop",
+                        "amount": "£10.00",
+                        "envelope_id": "001",
+                        "description": "Shopping for food.",
+                        "datetime": "2022-03-03T14:29:41.544Z"
+                      },
+                      {
+                        "id": "002",
+                        "deduction": false,
+                        "source": "Salary",
+                        "amount": "£1000.00",
+                        "envelope_id": "001",
+                        "description": "Add to food budget",
+                        "datetime": "2022-03-03T14:40:41.544Z"
+                      }
+                    ]}
+        '400':
+          description: Error - Bad Request
+          content:
+            text/plain; charset=utf-8:
+              examples:
+                Bad Request:
+                  value: Invalid argument provided
+      tags:
+        - Transaction
+tags:
+  - name: Envelope
+    description: >-
+      An envelope is an encapsulated store of funds intended for a specific use
+      case.
+  - name: Transaction
+    description: A record of addition or deduction to/from a budget envelope.
+components:
+  schemas:
+    Envelope:
+      type: object
+      properties:
+        name:
+          type: string
+        balance:
+          type: string
+      xml:
+        name: Envelope
+    Transaction:
+      type: object
+      properties:
+        deduction:
+          type: boolean
+        source:
+          type: string
+        amount:
+          type: string
+        envelope_id:
+          type: string
+        description:
+          type: string
+      xml:
+        name: Envelope

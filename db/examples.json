@@ -1,0 +1,46 @@
+{"envelopes": [
+  {
+    "id": "001",
+    "name": "Envelope 1",
+    "balance": "£100.00"
+  },
+  {
+    "id": "002",
+    "name": "Envelope 2",
+    "balance": "£200.00"
+  },
+  {
+    "id": "003",
+    "name": "Envelope 3",
+    "balance": "£300.00"
+  }
+],
+"transactions": [
+  {
+    "id": "001",
+    "deduction": true,
+    "source": "Example Shop",
+    "amount": "£10.00",
+    "envelope_id": "001",
+    "description": "Shopping for food.",
+    "datetime": "2022-03-03T14:29:41.544Z"
+  },
+  {
+    "id": "002",
+    "deduction": false,
+    "source": "Salary",
+    "amount": "£1000.00",
+    "envelope_id": "001",
+    "description": "Add to food budget",
+    "datetime": "2022-03-03T14:40:41.544Z"
+  },
+  {
+    "id": "003",
+    "deduction": true,
+    "source": "Italian Restaurant",
+    "amount": "£100.00",
+    "envelope_id": "003",
+    "description": "Celebration meal.",
+    "datetime": "2022-03-03T21:29:41.544Z"
+  }
+]}
