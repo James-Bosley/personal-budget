@@ -25,8 +25,14 @@ const dbQueries = {
 
   post: async (table, input) => {
     try {
-      return await knex(table).insert(input);
+      const data = await knex(table).insert(input);
+      if(data.rowCount === 1) {
+        return 'Success';
+      } else {
+        return 'Invalid argument provided';
+      }
     } catch (err) {
+      console.log(err);
       return 'Invalid argument provided';
     }
   },
@@ -54,6 +60,25 @@ const dbQueries = {
       }
     } catch (err) {
       return 'Invalid argument provided';
+    }
+  },
+
+  updateBalance: async (id, amount, deduction) => {
+    try {
+      let envelope = await knex.where({id: id}).select().from('envelopes');
+      if(deduction) {
+        envelope[0].balance -= amount;
+      } else {
+        envelope[0].balance += amount;
+      }
+      const data = await knex('envelopes').where({id: id}).update({balance: envelope[0].balance});
+      if(data === 1) {
+        return 'Success';
+      } else {
+        return 'Invalid argument provided';
+      }
+    } catch (err) {
+        return 'Invalid argument provided';
     }
   }
 };

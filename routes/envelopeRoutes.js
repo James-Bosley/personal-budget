@@ -5,7 +5,7 @@ const builder = require('../db/objectBuilder');
 const envRouter = express.Router();
 
 envRouter.get('/', async (req, res) => {
-  const data = await db.selectAll('envelopes')
+  const data = await db.selectAll('envelopes');
   if(data) {
     res.json(data);
   } else {

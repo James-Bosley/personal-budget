@@ -1,17 +1,17 @@
 CREATE TABLE "envelopes" (
-  "id" int PRIMARY KEY,
-  "name" varchar,
-  "balance" money
+  "id" SERIAL PRIMARY KEY,
+  "name" varchar NOT NULL,
+  "balance" int NOT NULL
 );
 
 CREATE TABLE "transactions" (
-  "id" int PRIMARY KEY,
-  "deduction" boolean,
-  "source" varchar,
-  "amount" money,
-  "envelope_id" int,
+  "id" SERIAL PRIMARY KEY,
+  "deduction" boolean NOT NULL,
+  "source" varchar NOT NULL,
+  "amount" int NOT NULL,
+  "envelope_id" int NOT NULL,
   "description" varchar,
-  "datetime" timestamp
+  "datetime" timestamp NOT NULL
 );
 
 ALTER TABLE "transactions" ADD FOREIGN KEY ("envelope_id") REFERENCES "envelopes" ("id");

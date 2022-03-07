@@ -11,7 +11,7 @@ module.exports = {
   
   transaction: (data) => {
     let response
-    if(data.deduction && data.source && data.amount && data.envelope_id) {
+    if(data.deduction !== undefined && data.source && data.amount && data.envelope_id) {
       if(data.amount > 0) {
         response = {
           deduction: data.deduction,
