@@ -1,4 +1,4 @@
-const knex = require('./env');
+const knex = require('./db-config');
 
 const dbQueries = {
 
