@@ -63,7 +63,12 @@ transRouter.delete('/:id', async (req, res) => {
 });
 
 transRouter.get('/envelope/:id', async (req, res) => {
-
+  const data = await db.selectById('transactions', req.params.id, 'envelope_id');
+  if(data) {
+    res.json(data)
+  } else {
+    res.status(404).send('Invalid argument provided');
+  }
 });
 
 module.exports = transRouter;

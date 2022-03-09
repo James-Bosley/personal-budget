@@ -10,9 +10,9 @@ const dbQueries = {
     }
   },
 
-  selectById: async (table, id) => {
+  selectById: async (table, id, idType = 'id') => {
     try {
-      const data = await knex.where({id: id}).select().from(table);
+      const data = await knex.where({[idType]: id}).select().from(table);
       if(data.length > 0) {
         return data;
       } else {
